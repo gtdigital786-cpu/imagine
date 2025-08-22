@@ -42,7 +42,6 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     // Form submission handling
-    const contactForm = document.getElementById('contactForm');
     const housePlanForm = document.getElementById('housePlanForm');
 
     // Combine forms for submission
@@ -50,35 +49,32 @@ document.addEventListener('DOMContentLoaded', function() {
         housePlanForm.addEventListener('submit', async (e) => {
             e.preventDefault();
             
-            // Get contact form data
-            const contactData = new FormData(contactForm);
+            // Validate required fields
+            const name = document.getElementById('name').value.trim();
+            const mobile = document.getElementById('mobile').value.trim();
+            const email = document.getElementById('email').value.trim();
+            const city = document.getElementById('city').value.trim();
+            
+            if (!name || !mobile || !email || !city) {
+                showErrorMessage('Please fill in all required fields: Name, Mobile, Email, and City.');
+                return;
+            }
+            
             const housePlanData = new FormData(housePlanForm);
-            
-            // Combine both forms
-            const combinedData = new FormData();
-            
-            // Add contact form data
-            for (let [key, value] of contactData.entries()) {
-                combinedData.append(key, value);
-            }
-            
-            // Add house plan form data
-            for (let [key, value] of housePlanData.entries()) {
-                combinedData.append(key, value);
-            }
             
             try {
                 const response = await fetch('submit.php', {
                     method: 'POST',
-                    body: combinedData
+                    body: housePlanData
                 });
                 
                 const result = await response.json();
                 
                 if (result.success) {
                     showSuccessMessage(result.message);
-                    contactForm.reset();
                     housePlanForm.reset();
+                    // Show pay now button
+                    document.getElementById('payNowBtn').style.display = 'inline-block';
                 } else {
                     showErrorMessage(result.message);
                 }
@@ -86,6 +82,39 @@ document.addEventListener('DOMContentLoaded', function() {
                 showErrorMessage('An error occurred while submitting your request. Please try again.');
             }
         });
+    }
+
+    // Payment modal functionality
+    const payNowBtn = document.getElementById('payNowBtn');
+    const paymentModal = document.getElementById('paymentModal');
+    const upiBtn = document.querySelector('.upi-btn');
+    
+    if (payNowBtn) {
+        payNowBtn.addEventListener('click', () => {
+            paymentModal.style.display = 'block';
+        });
+    }
+    
+    if (upiBtn) {
+        upiBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            paymentModal.style.display = 'block';
+        });
+    }
+    
+    // Close payment modal
+    const paymentClose = paymentModal?.querySelector('.close');
+    if (paymentClose) {
+        paymentClose.onclick = function() {
+            paymentModal.style.display = 'none';
+        }
+    }
+    
+    // Close modal when clicking outside
+    window.onclick = function(event) {
+        if (event.target == paymentModal) {
+            paymentModal.style.display = 'none';
+        }
     }
 
     // WhatsApp button animation
@@ -156,4 +185,31 @@ function showErrorMessage(message) {
             messageDiv.remove();
         }
     }, 5000);
+}
+
+// Admin functions for status updates
+function updateStatus(id, status) {
+    if (confirm(`Are you sure you want to ${status} this submission?`)) {
+        fetch('update_status.php', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                id: id,
+                status: status
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                location.reload();
+            } else {
+                alert('Error updating status: ' + data.message);
+            }
+        })
+        .catch(error => {
+            alert('Error updating status: ' + error.message);
+        });
+    }
 }

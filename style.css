@@ -120,23 +120,47 @@ body {
 
 /* Hero Section */
 .hero {
-    background: linear-gradient(135deg, var(--light-gray), var(--light-green));
+    background: linear-gradient(135deg, rgba(59, 130, 246, 0.9), rgba(16, 185, 129, 0.9)), url('https://images.pexels.com/photos/323780/pexels-photo-323780.jpeg?auto=compress&cs=tinysrgb&w=1200') center/cover;
     padding: 80px 0;
     text-align: center;
+    position: relative;
+    color: var(--white);
+}
+
+.hero-background {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: url('https://images.pexels.com/photos/323780/pexels-photo-323780.jpeg?auto=compress&cs=tinysrgb&w=1200') center/cover;
+    z-index: -2;
+}
+
+.hero::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(135deg, rgba(59, 130, 246, 0.8), rgba(16, 185, 129, 0.8));
+    z-index: -1;
 }
 
 .hero-title {
     font-size: 3.5rem;
     font-weight: 800;
-    color: var(--primary-blue);
+    color: var(--white);
     margin-bottom: 20px;
-    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
 }
 
 .hero-subtitle {
     font-size: 1.3rem;
-    color: var(--dark-gray);
+    color: var(--white);
     margin-bottom: 40px;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
 }
 
 .hero-features {
@@ -335,7 +359,7 @@ body {
 }
 
 /* Form Sections */
-.contact-form, .house-plan-form {
+.house-plan-form {
     padding: 60px 0;
     background: var(--light-gray);
 }
@@ -550,9 +574,13 @@ body {
 .form-submit {
     text-align: center;
     margin-top: 40px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    align-items: center;
 }
 
-.submit-btn {
+.submit-btn, .pay-now-btn {
     background: linear-gradient(135deg, var(--accent-green), #059669);
     color: var(--white);
     padding: 15px 40px;
@@ -565,7 +593,11 @@ body {
     box-shadow: var(--shadow-lg);
 }
 
-.submit-btn:hover {
+.pay-now-btn {
+    background: linear-gradient(135deg, var(--primary-blue), var(--secondary-blue));
+}
+
+.submit-btn:hover, .pay-now-btn:hover {
     transform: translateY(-3px);
     box-shadow: 0 15px 25px -5px rgba(0, 0, 0, 0.2);
 }
@@ -576,22 +608,15 @@ body {
     font-style: italic;
 }
 
-/* Payment Section */
-.payment {
-    padding: 60px 0;
-    background: var(--white);
-}
-
-.payment-box {
+/* Payment Modal */
+.payment-modal {
     background: linear-gradient(135deg, var(--primary-blue), var(--secondary-blue));
     color: var(--white);
-    padding: 40px;
     border-radius: 20px;
     text-align: center;
-    box-shadow: var(--shadow-lg);
 }
 
-.payment-box h3 {
+.payment-modal h3 {
     font-size: 1.8rem;
     margin-bottom: 20px;
 }
@@ -637,6 +662,26 @@ body {
 .payment-btn.paytm:hover {
     background: #00BAF2;
     color: var(--white);
+}
+
+/* UPI Button in Header */
+.upi-btn {
+    background: var(--accent-green);
+    color: var(--white);
+    padding: 10px 16px;
+    border-radius: 25px;
+    text-decoration: none;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    box-shadow: var(--shadow);
+    cursor: pointer;
+    border: none;
+}
+
+.upi-btn:hover {
+    background: #059669;
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-lg);
 }
 
 /* Footer */
@@ -762,6 +807,10 @@ body {
         font-size: 2.5rem;
     }
     
+    .hero-subtitle {
+        font-size: 1.1rem;
+    }
+    
     .hero-features {
         flex-direction: column;
         gap: 20px;
@@ -796,6 +845,15 @@ body {
     .issues-grid, .benefits-grid {
         grid-template-columns: 1fr;
     }
+    
+    .form-submit {
+        flex-direction: column;
+    }
+    
+    .payment-buttons {
+        flex-direction: column;
+        gap: 10px;
+    }
 }
 
 @media (max-width: 480px) {
@@ -822,6 +880,14 @@ body {
     .help-section {
         flex-direction: column;
         gap: 8px;
+    }
+    
+    .hero-title {
+        font-size: 2rem;
+    }
+    
+    .hero-subtitle {
+        font-size: 1rem;
     }
 }
 
@@ -896,6 +962,28 @@ body {
 
 .back-link a:hover {
     color: var(--primary-blue);
+}
+
+.login-info {
+    margin-top: 20px;
+    padding: 15px;
+    background: var(--light-gray);
+    border-radius: 8px;
+    font-size: 0.9rem;
+}
+
+.login-info code {
+    background: var(--white);
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-family: monospace;
+    color: var(--primary-blue);
+}
+
+.emergency-access {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
 }
 
 .error-message {
@@ -1107,37 +1195,72 @@ body {
     background: var(--light-gray);
 }
 
+.status-pending, .status-approved, .status-rejected {
+    padding: 4px 8px;
+    border-radius: 12px;
+    font-size: 0.8rem;
+    font-weight: 600;
+}
+
 .status-pending {
     background: #FEF3C7;
     color: #92400E;
-    padding: 4px 8px;
-    border-radius: 12px;
-    font-size: 0.8rem;
-    font-weight: 600;
 }
 
-.status-completed {
+.status-approved {
     background: var(--light-green);
     color: #065F46;
-    padding: 4px 8px;
-    border-radius: 12px;
-    font-size: 0.8rem;
-    font-weight: 600;
 }
 
-.view-btn {
-    background: var(--accent-green);
-    color: var(--white);
+.status-rejected {
+    background: #FEE2E2;
+    color: #DC2626;
+}
+
+.action-buttons {
+    display: flex;
+    gap: 5px;
+    flex-wrap: wrap;
+}
+
+.view-btn, .approve-btn, .reject-btn {
     padding: 6px 12px;
     border: none;
     border-radius: 6px;
     cursor: pointer;
     font-size: 0.9rem;
-    transition: background-color 0.3s ease;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.view-btn {
+    background: var(--accent-green);
+    color: var(--white);
 }
 
 .view-btn:hover {
     background: #059669;
+}
+
+.approve-btn {
+    background: var(--primary-blue);
+    color: var(--white);
+}
+
+.approve-btn:hover {
+    background: var(--secondary-blue);
+}
+
+.reject-btn {
+    background: #EF4444;
+    color: var(--white);
+}
+
+.reject-btn:hover {
+    background: #DC2626;
 }
 
 .no-data {
@@ -1309,5 +1432,10 @@ body {
     
     .floor-grid {
         grid-template-columns: 1fr;
+    }
+    
+    .action-buttons {
+        flex-direction: column;
+        gap: 5px;
     }
 }

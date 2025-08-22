@@ -12,6 +12,71 @@ include 'db.php';
 // Handle password change
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['change_password'])) {
     $new_password = $_POST['new_password'] ?? '';
+    $current_password = $_POST['current_password'] ?? '';
+    $username = $_SESSION['admin_username'];
+    
+    if (!empty($new_password) && !empty($current_password)) {
+        try {
+            // Verify current password
+            $stmt = $pdo->prepare("SELECT password FROM admins WHERE username = ?");
+            $stmt->execute([$username]);
+            $admin = $stmt->fetch();
+            
+            if (!$admin || !password_verify($current_password, $admin['password'])) {
+                $error_message = "Current password is incorrect";
+            } else {
+                $hashed_password = password_hash($new_password, PASSWORD_DEFAULT);
+                $stmt = $pdo->prepare("UPDATE admins SET password = ? WHERE username = ?");
+                $stmt->execute([$hashed_password, $username]);
+                $success_message = "Password updated successfully!";
+            }
+        } catch(PDOException $e) {
+            $error_message = "Error updating password: " . $e->getMessage();
+        }
+    } else {
+        $error_message = "Both current and new passwords are required";
+    }
+}
+
+// Handle username change
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['change_username'])) {
+    $new_username = $_POST['new_username'] ?? '';
+    $current_password = $_POST['username_password'] ?? '';
+    $current_username = $_SESSION['admin_username'];
+    
+    if (!empty($new_username) && !empty($current_password)) {
+        try {
+            // Verify current password
+            $stmt = $pdo->prepare("SELECT password FROM admins WHERE username = ?");
+            $stmt->execute([$current_username]);
+            $admin = $stmt->fetch();
+            
+            if (!$admin || !password_verify($current_password, $admin['password'])) {
+                $error_message = "Current password is incorrect";
+            } else {
+                // Check if new username already exists
+                $stmt = $pdo->prepare("SELECT COUNT(*) FROM admins WHERE username = ? AND username != ?");
+                $stmt->execute([$new_username, $current_username]);
+                if ($stmt->fetchColumn() > 0) {
+                    $error_message = "Username already exists";
+                } else {
+                    $stmt = $pdo->prepare("UPDATE admins SET username = ? WHERE username = ?");
+                    $stmt->execute([$new_username, $current_username]);
+                    $_SESSION['admin_username'] = $new_username;
+                    $success_message = "Username updated successfully!";
+                }
+            }
+        } catch(PDOException $e) {
+            $error_message = "Error updating username: " . $e->getMessage();
+        }
+    } else {
+        $error_message = "Both new username and current password are required";
+    }
+}
+
+// Handle old password-only change (deprecated)
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['old_change_password'])) {
+    $new_password = $_POST['new_password'] ?? '';
     $username = $_SESSION['admin_username'];
     
     if (!empty($new_password)) {
@@ -23,23 +88,34 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['change_password'])) {
         } catch(PDOException $e) {
             $error_message = "Error updating password: " . $e->getMessage();
         }
+    } else {
+        $error_message = "New password is required";
     }
 }
 
-// Handle username change
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['change_username'])) {
+// Handle old username-only change (deprecated)
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['old_change_username'])) {
     $new_username = $_POST['new_username'] ?? '';
     $current_username = $_SESSION['admin_username'];
     
     if (!empty($new_username)) {
         try {
-            $stmt = $pdo->prepare("UPDATE admins SET username = ? WHERE username = ?");
+            // Check if new username already exists
+            $stmt = $pdo->prepare("SELECT COUNT(*) FROM admins WHERE username = ? AND username != ?");
             $stmt->execute([$new_username, $current_username]);
-            $_SESSION['admin_username'] = $new_username;
-            $success_message = "Username updated successfully!";
+            if ($stmt->fetchColumn() > 0) {
+                $error_message = "Username already exists";
+            } else {
+                $stmt = $pdo->prepare("UPDATE admins SET username = ? WHERE username = ?");
+                $stmt->execute([$new_username, $current_username]);
+                $_SESSION['admin_username'] = $new_username;
+                $success_message = "Username updated successfully!";
+            }
         } catch(PDOException $e) {
             $error_message = "Error updating username: " . $e->getMessage();
         }
+    } else {
+        $error_message = "New username is required";
     }
 }
 
@@ -121,6 +197,7 @@ try {
                     <h4>Change Username</h4>
                     <form method="POST" class="inline-form">
                         <input type="text" name="new_username" placeholder="New Username" required>
+                        <input type="password" name="username_password" placeholder="Current Password" required>
                         <button type="submit" name="change_username" class="btn-small">
                             <i class="fas fa-user-edit"></i> Update
                         </button>
@@ -130,6 +207,7 @@ try {
                 <div class="setting-item">
                     <h4>Change Password</h4>
                     <form method="POST" class="inline-form">
+                        <input type="password" name="current_password" placeholder="Current Password" required>
                         <input type="password" name="new_password" placeholder="New Password" required>
                         <button type="submit" name="change_password" class="btn-small">
                             <i class="fas fa-key"></i> Update
@@ -219,9 +297,21 @@ try {
                                     </span>
                                 </td>
                                 <td>
-                                    <button class="view-btn" onclick="viewDetails(<?php echo $submission['id']; ?>)">
-                                        <i class="fas fa-eye"></i> View
-                                    </button>
+                                    <div class="action-buttons">
+                                        <button class="view-btn" onclick="viewDetails(<?php echo $submission['id']; ?>)">
+                                            <i class="fas fa-eye"></i> View
+                                        </button>
+                                        <?php if ($submission['status'] !== 'approved'): ?>
+                                        <button class="approve-btn" onclick="updateStatus(<?php echo $submission['id']; ?>, 'approved')">
+                                            <i class="fas fa-check"></i> Approve
+                                        </button>
+                                        <?php endif; ?>
+                                        <?php if ($submission['status'] !== 'rejected'): ?>
+                                        <button class="reject-btn" onclick="updateStatus(<?php echo $submission['id']; ?>, 'rejected')">
+                                            <i class="fas fa-times"></i> Reject
+                                        </button>
+                                        <?php endif; ?>
+                                    </div>
                                 </td>
                             </tr>
                             <?php endforeach; ?>

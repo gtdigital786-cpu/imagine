@@ -45,6 +45,7 @@
 
     <!-- Hero Section -->
     <section class="hero">
+        <div class="hero-background"></div>
         <div class="container">
             <div class="hero-content">
                 <h2 class="hero-title animated-text">Your Dream, Our Blueprint</h2>
@@ -173,7 +174,7 @@
     </section>
 
     <!-- Contact Form Section -->
-    <section class="contact-form" id="contact">
+    <section class="house-plan-form" id="houseplan">
         <div class="container">
             <div class="section-header">
                 <h2 class="section-title">Let's Start the Journey for Your Dream Home</h2>
@@ -181,41 +182,33 @@
                 <div class="title-underline"></div>
             </div>
             
-            <form id="contactForm" class="form-style">
-                <div class="form-grid">
-                    <div class="form-group">
-                        <label for="name"><i class="fas fa-user"></i> Name *</label>
-                        <input type="text" id="name" name="name" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="mobile"><i class="fas fa-phone"></i> Mobile Number *</label>
-                        <input type="tel" id="mobile" name="mobile" required pattern="[0-9]{10}">
-                    </div>
-                    <div class="form-group">
-                        <label for="email"><i class="fas fa-envelope"></i> Email *</label>
-                        <input type="email" id="email" name="email" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="city"><i class="fas fa-map-marker-alt"></i> City *</label>
-                        <input type="text" id="city" name="city" required>
+            <form id="housePlanForm" class="detailed-form">
+                <!-- Contact Information -->
+                <div class="form-section">
+                    <h3 class="section-subtitle"><i class="fas fa-user"></i> Contact Information *</h3>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="name"><i class="fas fa-user"></i> Name *</label>
+                            <input type="text" id="name" name="name" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="mobile"><i class="fas fa-phone"></i> Mobile Number *</label>
+                            <input type="tel" id="mobile" name="mobile" required pattern="[0-9]{10}">
+                        </div>
+                        <div class="form-group">
+                            <label for="email"><i class="fas fa-envelope"></i> Email *</label>
+                            <input type="email" id="email" name="email" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="city"><i class="fas fa-map-marker-alt"></i> City *</label>
+                            <input type="text" id="city" name="city" required>
+                        </div>
                     </div>
                 </div>
-            </form>
-        </div>
-    </section>
 
-    <!-- House Plan Form -->
-    <section class="house-plan-form" id="houseplan">
-        <div class="container">
-            <div class="section-header">
-                <h2 class="section-title">Make My House Plan</h2>
-                <div class="title-underline"></div>
-            </div>
-            
-            <form id="housePlanForm" class="detailed-form">
                 <!-- Plot Shape -->
                 <div class="form-section">
-                    <h3 class="section-subtitle"><i class="fas fa-shapes"></i> 1. Shape of Plot</h3>
+                    <h3 class="section-subtitle"><i class="fas fa-shapes"></i> Shape of Plot</h3>
                     <div class="checkbox-grid">
                         <label class="checkbox-item">
                             <input type="checkbox" name="plot_shape[]" value="Square">
@@ -242,7 +235,7 @@
 
                 <!-- Dimensions -->
                 <div class="form-section">
-                    <h3 class="section-subtitle"><i class="fas fa-ruler"></i> 2. Dimensions (in feet and inches)</h3>
+                    <h3 class="section-subtitle"><i class="fas fa-ruler"></i> Dimensions (in feet and inches)</h3>
                     <div class="form-grid">
                         <div class="form-group">
                             <label for="plot_length">Length of Plot</label>
@@ -261,7 +254,7 @@
 
                 <!-- Side Margins -->
                 <div class="form-section">
-                    <h3 class="section-subtitle"><i class="fas fa-border-all"></i> 3. Side Margins (in feet and inches)</h3>
+                    <h3 class="section-subtitle"><i class="fas fa-border-all"></i> Side Margins (in feet and inches)</h3>
                     <div class="form-grid">
                         <div class="form-group">
                             <label for="margin_right">Right</label>
@@ -284,7 +277,7 @@
 
                 <!-- Road for Plot -->
                 <div class="form-section">
-                    <h3 class="section-subtitle"><i class="fas fa-road"></i> 4. Road for Plot</h3>
+                    <h3 class="section-subtitle"><i class="fas fa-road"></i> Road for Plot</h3>
                     <div class="checkbox-grid">
                         <label class="checkbox-item">
                             <input type="checkbox" name="road_direction[]" value="East">
@@ -311,7 +304,7 @@
 
                 <!-- Front Facing -->
                 <div class="form-section">
-                    <h3 class="section-subtitle"><i class="fas fa-compass"></i> 5. Front Facing of House</h3>
+                    <h3 class="section-subtitle"><i class="fas fa-compass"></i> Front Facing of House</h3>
                     <div class="radio-grid">
                         <label class="radio-item">
                             <input type="radio" name="front_facing" value="East">
@@ -338,7 +331,7 @@
 
                 <!-- Entry Gate -->
                 <div class="form-section">
-                    <h3 class="section-subtitle"><i class="fas fa-door-open"></i> 6. Entry Gate for Compound Wall</h3>
+                    <h3 class="section-subtitle"><i class="fas fa-door-open"></i> Entry Gate for Compound Wall</h3>
                     <div class="radio-grid">
                         <label class="radio-item">
                             <input type="radio" name="entry_gate" value="East">
@@ -365,7 +358,7 @@
 
                 <!-- Main Door -->
                 <div class="form-section">
-                    <h3 class="section-subtitle"><i class="fas fa-home"></i> 7. Main Door for House</h3>
+                    <h3 class="section-subtitle"><i class="fas fa-home"></i> Main Door for House</h3>
                     <div class="radio-grid">
                         <label class="radio-item">
                             <input type="radio" name="main_door" value="East">
@@ -395,7 +388,7 @@
                     <!-- Ground Floor -->
                     <div class="accordion-item">
                         <div class="accordion-header">
-                            <h3><i class="fas fa-building"></i> 8. Ground Floor Requirements</h3>
+                            <h3><i class="fas fa-building"></i> Ground Floor Requirements</h3>
                             <i class="fas fa-chevron-down"></i>
                         </div>
                         <div class="accordion-content">
@@ -483,7 +476,7 @@
                     <!-- First Floor -->
                     <div class="accordion-item">
                         <div class="accordion-header">
-                            <h3><i class="fas fa-building"></i> 9. First Floor Requirements</h3>
+                            <h3><i class="fas fa-building"></i> First Floor Requirements</h3>
                             <i class="fas fa-chevron-down"></i>
                         </div>
                         <div class="accordion-content">
@@ -571,7 +564,7 @@
                     <!-- Second Floor -->
                     <div class="accordion-item">
                         <div class="accordion-header">
-                            <h3><i class="fas fa-building"></i> 10. Second Floor Requirements</h3>
+                            <h3><i class="fas fa-building"></i> Second Floor Requirements</h3>
                             <i class="fas fa-chevron-down"></i>
                         </div>
                         <div class="accordion-content">
@@ -659,7 +652,7 @@
                     <!-- Total Area -->
                     <div class="accordion-item">
                         <div class="accordion-header">
-                            <h3><i class="fas fa-calculator"></i> 11. Total Area Requirement (in sq ft)</h3>
+                            <h3><i class="fas fa-calculator"></i> Total Area Requirement (in sq ft)</h3>
                             <i class="fas fa-chevron-down"></i>
                         </div>
                         <div class="accordion-content">
@@ -686,6 +679,9 @@
                     <button type="submit" class="submit-btn">
                         <i class="fas fa-paper-plane"></i> Submit My House Plan Request
                     </button>
+                    <button type="button" id="payNowBtn" class="pay-now-btn" style="display: none;">
+                        <i class="fas fa-credit-card"></i> Pay Now
+                    </button>
                     <p class="delivery-info">
                         <i class="fas fa-download"></i> PDF of plan will be available for download after 72 hours
                     </p>
@@ -694,28 +690,27 @@
         </div>
     </section>
 
-    <!-- Payment Section -->
-    <section class="payment" id="payment">
-        <div class="container">
-            <div class="payment-box">
-                <h3><i class="fas fa-credit-card"></i> Make Payment</h3>
-                <div class="upi-details">
-                    <p><strong>UPI ID:</strong> imaginehome@upi</p>
-                    <div class="payment-buttons">
-                        <a href="upi://pay?pa=imaginehome@upi&pn=Imagine Your Home&cu=INR" class="payment-btn gpay">
-                            <i class="fab fa-google-pay"></i> Google Pay
-                        </a>
-                        <a href="phonepe://pay?pa=imaginehome@upi&pn=Imagine Your Home&cu=INR" class="payment-btn phonepe">
-                            <i class="fas fa-mobile-alt"></i> PhonePe
-                        </a>
-                        <a href="paytmmp://pay?pa=imaginehome@upi&pn=Imagine Your Home&cu=INR" class="payment-btn paytm">
-                            <i class="fas fa-wallet"></i> Paytm
-                        </a>
-                    </div>
+    <!-- Payment Modal -->
+    <div id="paymentModal" class="modal">
+        <div class="modal-content payment-modal">
+            <span class="close">&times;</span>
+            <h3><i class="fas fa-credit-card"></i> Make Payment</h3>
+            <div class="upi-details">
+                <p><strong>UPI ID:</strong> imaginehome@upi</p>
+                <div class="payment-buttons">
+                    <a href="upi://pay?pa=imaginehome@upi&pn=Imagine Your Home&cu=INR" class="payment-btn gpay">
+                        <i class="fab fa-google-pay"></i> Google Pay
+                    </a>
+                    <a href="phonepe://pay?pa=imaginehome@upi&pn=Imagine Your Home&cu=INR" class="payment-btn phonepe">
+                        <i class="fas fa-mobile-alt"></i> PhonePe
+                    </a>
+                    <a href="paytmmp://pay?pa=imaginehome@upi&pn=Imagine Your Home&cu=INR" class="payment-btn paytm">
+                        <i class="fas fa-wallet"></i> Paytm
+                    </a>
                 </div>
             </div>
         </div>
-    </section>
+    </div>
 
     <!-- Footer -->
     <footer class="footer">

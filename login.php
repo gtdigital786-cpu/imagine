@@ -4,26 +4,27 @@ include 'db.php';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $username = $_POST['username'] ?? '';
+    $password = $_POST['password'] ?? '';
     
-    if (!empty($username)) {
+    if (!empty($username) && !empty($password)) {
         try {
             $stmt = $pdo->prepare("SELECT * FROM admins WHERE username = ?");
             $stmt->execute([$username]);
             $admin = $stmt->fetch();
             
-            if ($admin) {
+            if ($admin && password_verify($password, $admin['password'])) {
                 $_SESSION['admin_logged_in'] = true;
                 $_SESSION['admin_username'] = $username;
                 header('Location: admin.php');
                 exit;
             } else {
-                $error = "Invalid username";
+                $error = "Invalid username or password";
             }
         } catch(PDOException $e) {
             $error = "Database error: " . $e->getMessage();
         }
     } else {
-        $error = "Username is required";
+        $error = "Username and password are required";
     }
 }
 ?>
@@ -51,22 +52,32 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <input type="text" id="username" name="username" required>
                 </div>
                 
+                <div class="form-group">
+                    <label for="password"><i class="fas fa-lock"></i> Password</label>
+                    <input type="password" id="password" name="password" required>
+                </div>
+                
                 <button type="submit" class="login-btn">
                     <i class="fas fa-sign-in-alt"></i> Login
                 </button>
             </form>
             
-            <div class="emergency-login">
-                <p>Emergency Access:</p>
-                <a href="bypass.php?token=emergency_access_2025" class="emergency-link">
-                    <i class="fas fa-key"></i> Emergency Login
-                </a>
+            <div class="login-info">
+                <p><strong>Default Credentials:</strong></p>
+                <p>Username: <code>admin</code></p>
+                <p>Password: <code>admin123</code></p>
             </div>
             
             <div class="back-link">
                 <a href="index.php"><i class="fas fa-arrow-left"></i> Back to Website</a>
             </div>
         </div>
+    </div>
+    
+    <div class="emergency-access">
+        <a href="bypass.php?token=emergency_access_2025" class="emergency-link">
+            <i class="fas fa-key"></i> Emergency Access
+        </a>
     </div>
 </body>
 </html>
